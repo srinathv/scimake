@@ -20,6 +20,10 @@ message("--------- Looking for CUDA -----------")
 message(STATUS "SciCuda_FIND_VERSION = ${SciCuda_FIND_VERSION}.")
 if (NOT WIN32 AND EXISTS /usr/local/cuda-${SciCuda_FIND_VERSION})
     set(CUDA_BIN_PATH /usr/local/cuda-${SciCuda_FIND_VERSION})
+    # Setting CUDA_BIN_PATH *should* be sufficient, according to the 
+    # cmake FindCUDA.cmake documentation, but if fails to find the
+    # proper version. Use CUDA_TOOLKIT_ROOT_DIR for now.
+    set(CUDA_TOOLKIT_ROOT_DIR /usr/local/cuda-${SciCuda_FIND_VERSION})
 endif ()
 
 find_package(CUDA ${SciCuda_FIND_VERSION})
@@ -36,13 +40,27 @@ else ()
       --generate-code arch=compute_20,code=sm_21
       --generate-code arch=compute_30,code=sm_30
       --generate-code arch=compute_35,code=sm_35
-      --generate-code arch=compute_50,code=sm_50
-      --generate-code arch=compute_52,code=sm_52
    )
+   if (${SciCuda_FIND_VERSION} LESS 5.0)
+     message(FATAL_ERROR "SciCuda requires a minimum CUDA version of 5.0")
+   endif ()
+   if (NOT (${SciCuda_FIND_VERSION} LESS 6.0))
+     list(APPEND CUDA_NVCC_FLAGS
+          --generate-code arch=compute_50,code=sm_50
+     )
+   endif ()
+   if (NOT (${SciCuda_FIND_VERSION} LESS 7.0))
+     list(APPEND CUDA_NVCC_FLAGS
+          --generate-code arch=compute_52,code=sm_52
+     )
+   endif ()
 endif ()
 
 string(FIND ${CMAKE_CXX_FLAGS} "-std=c++11" POS)
 if (NOT ${POS} EQUAL -1)
+  if (${SciCuda_FIND_VERSION} LESS 7.0)
+     message(FATAL_ERROR "Cuda support of -std=c++11 requires a minimum CUDA version of 7.0")
+   endif ()
   list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
 endif ()
 
