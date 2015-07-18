@@ -642,10 +642,10 @@ macro(SciFindPackage)
 # This message is purposefully NOT a STATUS message
 # To provide more readable output
   if (NOT DEBUG_CMAKE AND TFP_FIND_QUIETLY)
-    message(STATUS "Looking for ${TFP_PACKAGE}.")
+    message(STATUS "Seeking ${TFP_PACKAGE}.")
   else ()
     message("")
-    message("--------- SciFindPackage looking for ${TFP_PACKAGE} ---------")
+    message("--------- SciFindPackage seeking ${TFP_PACKAGE} ---------")
   endif ()
 
   if (DEBUG_CMAKE)
