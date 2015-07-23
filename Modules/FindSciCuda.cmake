@@ -115,6 +115,12 @@ macro(SciDoCudaFound)
     set(CUDA_cuda_SHLIB ${CUDA_CUDA_LIBRARY})
   endif ()
 
+# Find the cudadevrt library
+  find_library(CUDA_CUDADEVRT_LIBRARY
+    NAMES cudadevrt
+    PATHS ${CUDA_LIBRARY_DIRS}
+    )
+
   if (CUDA_TOOLKIT_ROOT_DIR)
     set(HAVE_CUDA_TOOLKIT TRUE)
     set(CUDA_BASE_LIBRARIES ${CUDA_cusparse_LIBRARY} ${CUDA_CUDART_LIBRARY})
@@ -135,6 +141,7 @@ macro(SciDoCudaFound)
       LIBRARY_DIRS LIBRARIES CUDART_LIBRARY
       curand_LIBRARY cublas_LIBRARY
       cusparse_LIBRARY cufft_LIBRARY npp_LIBRARY cupti_LIBRARY
+      CUDADEVRT_LIBRARY
       BASE_LIBRARIES
   )
     SciPrintVar(CUDA_${sfx})
