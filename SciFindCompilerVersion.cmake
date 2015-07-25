@@ -54,8 +54,12 @@ macro(SciFindCompilerVersion COMPLANG)
     string(REPLACE "Version " "" _version_tmp ${_version_tmp})
     # MESSAGE("_version_tmp = ${_version_tmp}.")
   elseif (CMAKE_${COMPLANG}_COMPILER_ID STREQUAL Intel)
-    if (CMAKE_${COMPLANG}_COMPILER MATCHES "icc" OR CMAKE_${COMPLANG}_COMPILER MATCHES "icpc" OR
-    CMAKE_${COMPLANG}_COMPILER MATCHES "mpi" OR CMAKE_${COMPLANG}_COMPILER MATCHES "CC")
+    # message(STATUS "Intel: CMAKE_${COMPLANG}_COMPILER = ${CMAKE_${COMPLANG}_COMPILER}")
+    if (CMAKE_${COMPLANG}_COMPILER MATCHES "icc"
+        OR CMAKE_${COMPLANG}_COMPILER MATCHES "icpc"
+        OR CMAKE_${COMPLANG}_COMPILER MATCHES "mpi"
+        OR CMAKE_${COMPLANG}_COMPILER MATCHES "CC"
+        OR CMAKE_${COMPLANG}_COMPILER MATCHES "cc")
       execute_process(
         COMMAND ${CMAKE_${COMPLANG}_COMPILER} --version
         OUTPUT_VARIABLE _version_str
