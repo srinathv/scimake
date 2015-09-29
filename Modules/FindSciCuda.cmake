@@ -39,8 +39,16 @@ endif ()
 macro(SciDoCudaFound)
 
   if (CMAKE_BUILD_TYPE MATCHES Debug)
+    string(FIND ${CMAKE_CXX_FLAGS} "-std=c++11" POS)
+    if (NOT ${POS} EQUAL -1)
+      if (CUDA_VERSION LESS 7.0)
+        message(FATAL_ERROR "Cuda support of -std=c++11 requires a minimum CUDA version of 7.0")
+      endif ()
+      list(APPEND CUDA_NVCC_FLAGS "-std=c++11")
+    endif ()
     list(APPEND CUDA_NVCC_FLAGS
-      -g -G --use_fast_math --generate-code arch=compute_20,code=sm_20
+      -g -G --use_fast_math
+      --generate-code arch=compute_20,code=sm_20
     )
   else ()
     string(FIND ${CMAKE_CXX_FLAGS} "-std=c++11" POS)
